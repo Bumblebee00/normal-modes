@@ -114,17 +114,22 @@ function drawSpring(x1, y1, x2, y2) {
   let orthogonal_direction = createVector(-line_direction.y, line_direction.x);
   let current_point = createVector(x1, y1);
 
-  turtle(current_point, line_direction, d/4);
-  n_zigzag = 10;
+  current_point = turtle(current_point, line_direction.copy().mult(d/4));
+  let n_zigzag = constrain(k, 2, 50);
+  let zigzaglenght = (d/2) / n_zigzag;
+  let molla_height = 5;
   for (let i = 0; i < n_zigzag; i++){
-    turtle(current_point, line_direction + orthogonal_direction, d/4/n_zigzag);
+    current_point = turtle(current_point, p5.Vector.add(line_direction.copy().mult(zigzaglenght/3), orthogonal_direction.copy().mult(molla_height)));
+    current_point = turtle(current_point, p5.Vector.add(line_direction.copy().mult(zigzaglenght/3), orthogonal_direction.copy().mult(-2*molla_height)));
+    current_point = turtle(current_point, p5.Vector.add(line_direction.copy().mult(zigzaglenght/3), orthogonal_direction.copy().mult(molla_height)));
   }
+  current_point = turtle(current_point, line_direction.copy().mult(d/4));
 }
 
-function turtle(current_point, direction, lenght){
-  line(current_point.x, current_point.y, current_point.x + direction.x * lenght, current_point.y + direction.y * lenght);
-  current_point.x += direction.x * lenght;
-  current_point.y += direction.y * lenght;
+function turtle(current_point, direction){
+  line(current_point.x, current_point.y, current_point.x + direction.x, current_point.y + direction.y);
+  current_point.x += direction.x;
+  current_point.y += direction.y;
   return current_point;
 }
 
