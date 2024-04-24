@@ -25,9 +25,6 @@ let isRunning = false;
 function setup() {
   createCanvas(800, 800);
 
-  w1 = sqrt(100 * g / l);
-  w2 = sqrt((100 * g / l) + (2 * k / m));
-
   // Create sliders
   thetaSlider = createSlider(-PI, PI, theta0, 0.01);
   thetaSlider.position(20, height - 110);
@@ -66,6 +63,11 @@ function draw() {
     phi = (A1 * sin(w1 * t + o2) - A2 * sin(w2 * t + o2));
     t += 0.01;
   } else{
+    // Update parameters
+    k = parseFloat(kTextBox.value());
+    g = parseFloat(gTextBox.value());
+    m = parseFloat(mTextBox.value());
+    l = parseFloat(lTextBox.value());
     // Update starting conditions based on sliders
     theta0 = thetaSlider.value();
     theta_dot0 = thetaDotSlider.value();
@@ -83,11 +85,14 @@ function draw() {
 
   // Draw pendulums
   stroke("red");
+  fill("red");
   line(300, 400, 300 + l * sin(theta), 400 + l * cos(theta));
+  circle(300 + l * sin(theta), 400 + l * cos(theta), m*2);
   line(500, 400, 500 + l * sin(phi), 400 + l * cos(phi));
-  
-  // Draw springs
+  circle(500 + l * sin(phi), 400 + l * cos(phi), m*2);
+  // Draw spring
   stroke(0);
+  fill(0);
   drawSpring(300 + l * sin(theta), 400 + l * cos(theta), 500 + l * sin(phi), 400 + l * cos(phi));
   
   // Show numerical values on sliders
@@ -104,15 +109,25 @@ function draw() {
 }
 
 function drawSpring(x1, y1, x2, y2) {
-  line(x1, y1, x2, y2);
-  let dx = (x2 - x1) / 10;
-  let dy = (y2 - y1) / 10;
-  for (let i = 0; i < 11; i++) {
-    let x = x1 + i * dx;
-    let y = y1 + i * dy;
-    ellipse(x, y, 5, 5);
+  d = dist(x1, y1, x2, y2);
+  let line_direction = createVector(x2 - x1, y2 - y1).mult(1/d);
+  let orthogonal_direction = createVector(-line_direction.y, line_direction.x);
+  let current_point = createVector(x1, y1);
+
+  turtle(current_point, line_direction, d/4);
+  n_zigzag = 10;
+  for (let i = 0; i < n_zigzag; i++){
+    turtle(current_point, line_direction + orthogonal_direction, d/4/n_zigzag);
   }
 }
+
+function turtle(current_point, direction, lenght){
+  line(current_point.x, current_point.y, current_point.x + direction.x * lenght, current_point.y + direction.y * lenght);
+  current_point.x += direction.x * lenght;
+  current_point.y += direction.y * lenght;
+  return current_point;
+}
+
 
 // draw arrow between two points, with a trinagle at the end
 function drawArrow(x1, y1, x2, y2) {
@@ -131,6 +146,9 @@ function drawArrow(x1, y1, x2, y2) {
 
 function startSimulation() {
   // calculate equation parameters
+  w1 = sqrt(100 * g / l);
+  w2 = sqrt((100 * g / l) + (2 * k / m));
+
   o1 = atan(w1 *( phi0 + theta0) / (phi_dot0 + theta_dot0));
   o2 = atan(w1 *( phi0 - theta0) / (phi_dot0 - theta_dot0));
   A1 = sqrt(pow((phi_dot0 + theta_dot0)/w1, 2) + pow(phi0 + theta0, 2))/2; // sqrt(2) is for normalization (to make the amplitude 1)
