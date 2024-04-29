@@ -26,11 +26,11 @@ function setup() {
   createCanvas(800, 800);
 
   // Create sliders
-  thetaSlider = createSlider(-PI, PI, theta0, 0.01);
+  thetaSlider = createSlider(-PI/6, PI/6, theta0, 0.01);
   thetaSlider.position(20, height - 110);
   thetaDotSlider = createSlider(-10, 10, theta_dot0, 0.1);
   thetaDotSlider.position(20, height - 80);
-  phiSlider = createSlider(-PI, PI, phi0, 0.01);
+  phiSlider = createSlider(-PI/6, PI/6, phi0, 0.01);
   phiSlider.position(20, height - 50);
   phiDotSlider = createSlider(-10, 10, phi_dot0, 0.1);
   phiDotSlider.position(20, height - 20);
@@ -108,16 +108,43 @@ function draw() {
   text("Length cm", lTextBox.x + 10, lTextBox.y - 10);
 }
 
+function startSimulation() {
+  // calculate equation parameters
+  w1 = sqrt(100 * g / l);
+  w2 = sqrt((100 * g / l) + (2 * k / m));
+
+  o1 = atan(w1 *( phi0 + theta0) / (phi_dot0 + theta_dot0));
+  o2 = atan(w1 *( phi0 - theta0) / (phi_dot0 - theta_dot0));
+  A1 = sqrt(pow((phi_dot0 + theta_dot0)/w1, 2) + pow(phi0 + theta0, 2))/2; // sqrt(2) is for normalization (to make the amplitude 1)
+  A2 = -sqrt(pow((phi_dot0 - theta_dot0)/w2, 2) + pow(phi0 - theta0, 2))/2;
+
+  isRunning = true;
+  t = 0;
+}
+
+function stopSimulation() {
+  isRunning = false;
+}
+
+// Utility functions
+function sign(x) {
+  return x > 0 ? 1 : -1;
+}
+
 function drawSpring(x1, y1, x2, y2) {
-  d = dist(x1, y1, x2, y2);
+  if (k == 0){
+    line(x1, y1, x2, y2);
+    return;
+  }
+  let d = dist(x1, y1, x2, y2);
   let line_direction = createVector(x2 - x1, y2 - y1).mult(1/d);
   let orthogonal_direction = createVector(-line_direction.y, line_direction.x);
   let current_point = createVector(x1, y1);
-
-  current_point = turtle(current_point, line_direction.copy().mult(d/4));
-  let n_zigzag = constrain(k, 2, 50);
+  let n_zigzag = constrain(k, 1, 40);
   let zigzaglenght = (d/2) / n_zigzag;
   let molla_height = 5;
+
+  current_point = turtle(current_point, line_direction.copy().mult(d/4));
   for (let i = 0; i < n_zigzag; i++){
     current_point = turtle(current_point, p5.Vector.add(line_direction.copy().mult(zigzaglenght/3), orthogonal_direction.copy().mult(molla_height)));
     current_point = turtle(current_point, p5.Vector.add(line_direction.copy().mult(zigzaglenght/3), orthogonal_direction.copy().mult(-2*molla_height)));
@@ -133,8 +160,6 @@ function turtle(current_point, direction){
   return current_point;
 }
 
-
-// draw arrow between two points, with a trinagle at the end
 function drawArrow(x1, y1, x2, y2) {
   let angle = atan2(y2 - y1, x2 - x1);
   let d = dist(x1, y1, x2, y2);
@@ -147,25 +172,4 @@ function drawArrow(x1, y1, x2, y2) {
   rotate(angle);
   triangle(-10, 5, -10, -5, 0, 0);
   pop();
-}
-
-function startSimulation() {
-  // calculate equation parameters
-  w1 = sqrt(100 * g / l);
-  w2 = sqrt((100 * g / l) + (2 * k / m));
-
-  o1 = atan(w1 *( phi0 + theta0) / (phi_dot0 + theta_dot0));
-  o2 = atan(w1 *( phi0 - theta0) / (phi_dot0 - theta_dot0));
-  A1 = sqrt(pow((phi_dot0 + theta_dot0)/w1, 2) + pow(phi0 + theta0, 2))/2; // sqrt(2) is for normalization (to make the amplitude 1)
-  A2 = -sqrt(pow((phi_dot0 - theta_dot0)/w2, 2) + pow(phi0 - theta0, 2))/2;
-  isRunning = true;
-  t = 0;
-}
-
-function stopSimulation() {
-  isRunning = false;
-}
-
-function sign(x) {
-  return x > 0 ? 1 : -1;
 }
