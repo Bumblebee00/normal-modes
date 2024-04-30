@@ -23,10 +23,10 @@ class circularBuffer {
 let d = 200; // in cm distance between the two pendulums
 let l = 200; // in cm length of the pendulums
 let g = 9.8; // gravity
-let k = 10; // spring constant
+let k = 5; // spring constant
 let m = 10; // mass of both pendulums
 
-let circ_buffer_size = 500;
+let circ_buffer_size = 700;
 let past_theta = new circularBuffer(circ_buffer_size);
 let past_phi = new circularBuffer(circ_buffer_size);
 
@@ -51,15 +51,16 @@ let isRunning = false;
 
 function setup() {
   createCanvas(700, 700);
+  angleMode(RADIANS);
 
   // Create sliders
   thetaSlider = createSlider(-PI/6, PI/6, 0, 0.01);
   thetaSlider.position(10, 10);
-  thetaDotSlider = createSlider(-10, 10, 0, 0.1);
+  thetaDotSlider = createSlider(-1, 1, 0, 0.1);
   thetaDotSlider.position(10, 30);
   phiSlider = createSlider(-PI/6, PI/6, 0, 0.01);
   phiSlider.position(10, 50);
-  phiDotSlider = createSlider(-10, 10, 0, 0.1);
+  phiDotSlider = createSlider(-1, 1, 0, 0.1);
   phiDotSlider.position(10, 70);
 
   // Create text boxes
@@ -136,13 +137,15 @@ function startSimulation() {
   w2 = sqrt((100 * g / l) + (2 * k / m));
 
   A1 = sqrt((theta0 + phi0)**2 / 4 + (theta_dot0 + phi_dot0)**2 / (4 * w1**2));
-  A2 = sqrt((theta0 - phi0)**2 / 4 + (theta_dot0 - phi_dot0)**2 / (4 * w2**2));
+  A2 = -sqrt((theta0 - phi0)**2 / 4 + (theta_dot0 - phi_dot0)**2 / (4 * w2**2));
   if (A1 != 0){
     o1 = asin((theta0 + phi0) / (2 * A1));
   } else { o1 = 0; }
   if (A2 != 0){
     o2 = asin((theta0 - phi0) / (2 * A2));
   } else { o2 = 0; }
+
+  print(w1, w2, A1, A2, o1, o2);
 
   isRunning = true;
   t = 0;
@@ -177,22 +180,29 @@ function drawConfigurationSpace(theta, phi, color1 = "red", color2 = "green") {
   fill(color2);
   drawArrow(x0, y0 + lq, x0, y0 - lq);
 
+  let scale = 1.7;
+  // trace of the point in the phase space
   for (let i = 0; i < circ_buffer_size; i++){
-    fill(0, 0, 0, 100 - i*100/circ_buffer_size);
-    stroke(0, 0, 0, 100 - i*100/circ_buffer_size);
-    circle(x0 + past_theta.get(i) * lq, y0 - past_phi.get(i) * lq, 1);
+    fill(50, 115, 246, 100 - i*100/circ_buffer_size);
+    stroke(50, 115, 246, 100 - i*100/circ_buffer_size);
+    circle(x0 + past_theta.get(i) * lq * scale, y0 - past_phi.get(i) * lq * scale, 1);
   }
-  
+  // point in the phase space
+  fill(50, 115, 246);
+  stroke(50, 115, 246);
+  circle(x0 + theta * lq * scale, y0 - phi * lq * scale, 8);
+  // normal mode lines
   stroke("black");
-  fill("black");
-
-  circle(x0 + theta * lq, y0 - phi * lq, 10);
-  
   line(x0-lq, y0-lq, x0 + lq, y0 + lq);
   line(x0-lq, y0+lq, x0 + lq, y0 - lq);
-
-  circle(x0 + (theta - phi)/sqrt(2) * lq, y0 + (theta - phi)/sqrt(2) * lq, 4);
-  circle(x0 + (theta + phi)/sqrt(2) * lq, y0 - (theta + phi)/sqrt(2) * lq, 4);
+  // projection of the point on the normal mode lines
+  let lx = (theta - phi) * lq * scale / 2;
+  let ly = (theta + phi) * lq * scale / 2;
+  circle(x0 + lx, y0 + lx, 3);
+  circle(x0 + ly, y0 - ly, 3);
+  stroke(0, 50);
+  line(x0 + lx, y0 + lx, x0 + theta * lq  * scale, y0 - phi * lq * scale);
+  line(x0 + ly, y0 - ly, x0 + theta * lq  * scale, y0 - phi * lq * scale);
 }
 
 function drawPendulums(theta, phi, color1 = "red", color2 = "green") {
@@ -210,7 +220,6 @@ function drawSpring(x1, y1, x2, y2, color = "black") {
   stroke(color);
   fill(color);
   if (k == 0){
-    line(x1, y1, x2, y2);
     return;
   }
   let d = dist(x1, y1, x2, y2);
