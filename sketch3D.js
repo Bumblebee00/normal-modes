@@ -57,35 +57,35 @@ function setup() {
   angleMode(RADIANS);
 
   // Create sliders
-  thetaSlider = createSlider(-PI/6, PI/6, 0, 0.01);
-  thetaSlider.position(10, 10);
-  thetaDotSlider = createSlider(-1, 1, 0, 0.1);
-  thetaDotSlider.position(10, 30);
-  phiSlider = createSlider(-PI/6, PI/6, 0, 0.01);
-  phiSlider.position(10, 50);
-  phiDotSlider = createSlider(-1, 1, 0, 0.1);
-  phiDotSlider.position(10, 70);
+  // thetaSlider = createSlider(-PI/6, PI/6, 0, 0.01);
+  // thetaSlider.position(10, 10);
+  // thetaDotSlider = createSlider(-1, 1, 0, 0.1);
+  // thetaDotSlider.position(10, 30);
+  // phiSlider = createSlider(-PI/6, PI/6, 0, 0.01);
+  // phiSlider.position(10, 50);
+  // phiDotSlider = createSlider(-1, 1, 0, 0.1);
+  // phiDotSlider.position(10, 70);
 
-  // Create text boxes
-  kTextBox = createInput(k.toString());
-  kTextBox.position(10, 90);
-  kTextBox.size(30);
+  // // Create text boxes
+  // kTextBox = createInput(k.toString());
+  // kTextBox.position(10, 90);
+  // kTextBox.size(30);
 
-  lTextBox = createInput(l.toString());
-  lTextBox.position(10, 130);
-  lTextBox.size(30);
+  // lTextBox = createInput(l.toString());
+  // lTextBox.position(10, 130);
+  // lTextBox.size(30);
 
-  mTextBox = createInput(m.toString());
-  mTextBox.position(10, 170);
-  mTextBox.size(30);
+  // mTextBox = createInput(m.toString());
+  // mTextBox.position(10, 170);
+  // mTextBox.size(30);
 
-  // Create buttons
-  startButton = createButton('Start');
-  startButton.position(200, 105);  
-  startButton.mousePressed(startSimulation);
-  stopButton = createButton('Stop');
-  stopButton.position(200, 125);
-  stopButton.mousePressed(stopSimulation);
+  // // Create buttons
+  // startButton = createButton('Start');
+  // startButton.position(200, 105);  
+  // startButton.mousePressed(startSimulation);
+  // stopButton = createButton('Stop');
+  // stopButton.position(200, 125);
+  // stopButton.mousePressed(stopSimulation);
 
   isRunning = true
 }
