@@ -92,7 +92,7 @@ function setup() {
 }
 
 function draw() {
-  background(0);
+  background(220);
   // Draw configuration space
   drawConfigurationSpace(theta, phi);
   // Draw pendulums
