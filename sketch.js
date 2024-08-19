@@ -56,11 +56,11 @@ function setup() {
   angleMode(RADIANS);
 
   // Create sliders
-  thetaSlider = createSlider(-PI/6, PI/6, 0, 0.01);
+  thetaSlider = createSlider(-PI/6, PI/6, 0.5, 0.01);
   thetaSlider.position(10, 10);
   thetaDotSlider = createSlider(-1, 1, 0, 0.1);
   thetaDotSlider.position(10, 30);
-  phiSlider = createSlider(-PI/6, PI/6, 0, 0.01);
+  phiSlider = createSlider(-PI/6, PI/6, -0.1, 0.01);
   phiSlider.position(10, 50);
   phiDotSlider = createSlider(-1, 1, 0, 0.1);
   phiDotSlider.position(10, 70);
@@ -162,7 +162,7 @@ function startSimulation() {
   print("A1: " + A1);
   print("A2: " + A2);
   print("o1: " + o1);
-  print("o2: " + o2);
+  print("o2: " + o2); 
 
   isRunning = true;
   t = 0;
