@@ -145,7 +145,7 @@ function draw() {
 function startSimulation() {
   // calculate equation parameters
   w1 = sqrt(100 * g / l);
-  w2 = sqrt((100 * g / l) + (2 * k * (m1 + m2) / (m1 * m2)));
+  w2 = sqrt((100 * g / l) + ( k * (m1 + m2) / (m1 * m2)));
   let m3 = (m2 - m1) / (m1 + m2);
 
   A1 = sqrt((theta0 + phi0 - m3*(theta0 - phi0))**2 / 4 + (theta_dot0 + phi_dot0 - m3*(theta_dot0 - phi_dot0))**2 / (4 * w1**2));
