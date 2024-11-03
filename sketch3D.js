@@ -32,9 +32,9 @@ let m = 1; // mass of the masses (kg)
 let w1; // oscillation frequency on the first normal mode
 let w2;
 let w3;
-let A1 = 50;
-let A2 = 10;
-let A3 = 0;
+let A1 = 40;
+let A2 = 50;
+let A3 = 10;
 let o1 = 1;
 let o2 = 2;
 let o3 = 3;
